@@ -1,6 +1,7 @@
 var express = require('express');
 var axios = require('axios');
 var bodyParser = require('body-parser');
+var TopClient = require('node-taobao-topclient').default;
 // var crypto = require('crypto');
 // var session = require('express-session');
 
@@ -34,6 +35,29 @@ app.get('/apis/:interfaceType/:inParams', function(req, res){
         axios.get(`http://api.dataoke.com/index.php?r=Port/index${req.params.inParams}`).then( r => {
             res.json(r.data)
         })
+    }else if(req.params.interfaceType === 'convert') {
+        const client = new TopClient({
+            'appkey': '25361075',
+            'appsecret': 'd6bbebc8a6864680a0bb776c8cce0be3',
+            'REST_URL': 'http://gw.api.taobao.com/router/rest'
+        });
+
+        client.execute('taobao.tbk.item.convert', {
+            'fields':'num_iid,click_url',
+            'num_iids':'540916554177',
+            'adzone_id':'70957850130',
+            'platform':'',
+            'unid':'',
+            'dx':''
+        }, function(error, response) {
+            if (!error){
+                console.log(response);
+            }
+            else {
+                console.log(error);
+            }
+             
+        },{code: '0000'},'get')
     }
 })
 
